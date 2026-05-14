@@ -3,86 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Forex Backtest Simulator - Graf Jelas</title>
+    <title>Forex Backtest Simulator - Responsif & Tanpa Emoji Kotak</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0c15; font-family: 'Segoe UI', system-ui, -apple-system; padding: 15px; color: #f0f0f0; }
-        .dashboard { max-width: 1400px; margin: 0 auto; background: #12141f; border-radius: 32px; padding: 25px 20px; border: 1px solid #2c2f3f; }
-        .header h1 { font-size: 1.8rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; background: linear-gradient(135deg, #fff, #aaccff); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 8px; }
-        .header p { text-align: center; color: #9aa3b8; margin-bottom: 20px; font-size: 0.9rem; }
-        kbd { background: #2c2f3f; border-radius: 6px; padding: 2px 8px; font-weight: bold; color: #ffd966; margin: 0 2px; display: inline-block; }
+        body {
+            background: #0a0c15;
+            font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, -apple-system, sans-serif;
+            padding: 15px;
+            color: #f0f0f0;
+        }
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #12141f;
+            border-radius: 32px;
+            padding: 25px 20px;
+            border: 1px solid #2c2f3f;
+            box-shadow: 0 25px 50px -12px black;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #aaccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Gunakan teks biasa untuk icon jika emoji gagal */
+        .header h1::before {
+            content: "[📊📈] ";
+            background: none;
+            color: #ffd966;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+        .header h1::after {
+            content: " [💹🧪]";
+            background: none;
+            color: #ffd966;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+        }
+        .header p {
+            text-align: center;
+            color: #9aa3b8;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        kbd {
+            background: #2c2f3f;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-weight: bold;
+            color: #ffd966;
+            margin: 0 2px;
+            display: inline-block;
+        }
         
-        .stats-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 25px; }
-        .streak-card { background: #1e2130; border-radius: 24px; padding: 12px 16px; text-align: center; min-width: 100px; border-bottom: 4px solid; }
+        /* Streaks + Winrate */
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .streak-card {
+            background: #1e2130;
+            border-radius: 24px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 130px;
+            border-bottom: 5px solid;
+        }
         .streak-loss { border-bottom-color: #ff7080; }
         .streak-win { border-bottom-color: #5eff9e; }
-        .streak-value { font-size: 2rem; font-weight: 800; }
+        .streak-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
         .streak-loss .streak-value { color: #ff7080; }
         .streak-win .streak-value { color: #5eff9e; }
-        .winrate-circle { background: #1e2130; width: 130px; height: 130px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 0 5px #12141f, 0 0 0 7px #2c2f3f; }
-        .winrate-circle .percent { font-size: 2.2rem; font-weight: 800; color: #ffd966; }
         
-        .basic-stats { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-        .stat-box { background: #1e2130; border-radius: 20px; padding: 8px 16px; text-align: center; min-width: 80px; }
-        .stat-number { font-size: 1.8rem; font-weight: 700; color: #ffd966; }
+        .winrate-circle { 
+            background: #1e2130; 
+            width: 170px; 
+            height: 170px; 
+            border-radius: 50%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 0 0 6px #12141f, 0 0 0 9px #2c2f3f;
+        }
+        .winrate-circle .percent { font-size: 2.8rem; font-weight: 800; color: #ffd966; }
+        .winrate-circle span:last-child { font-size: 0.9rem; color: #b0b3cc; margin-top: 5px; }
         
-        .button-group { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
-        .btn-win, .btn-loss { padding: 12px 24px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 40px; cursor: pointer; color: white; min-width: 120px; }
-        .btn-win { background: linear-gradient(135deg, #1b8732, #2ecc71); }
-        .btn-loss { background: linear-gradient(135deg, #b33, #e74c3c); }
-        .reset-btn { background: #2c2f3f; border: 1px solid #6c6f82; color: #f0f0f0; padding: 8px 20px; border-radius: 60px; font-weight: 600; cursor: pointer; }
+        .basic-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: #1e2130;
+            border-radius: 20px;
+            padding: 10px 20px;
+            text-align: center;
+            min-width: 90px;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd966;
+        }
         
-        .finance-panel, .advanced-metrics, .chart-panel, .history-panel { background: #0e101a; border-radius: 24px; padding: 15px; margin-bottom: 20px; border: 1px solid #282b3a; }
-        .input-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
-        .input-group { display: flex; flex-direction: column; gap: 4px; }
-        .input-group label { font-size: 0.65rem; font-weight: 600; color: #b0b3cc; }
-        .input-group input { background: #080a12; border: 1px solid #363a4a; border-radius: 12px; padding: 8px 10px; color: white; font-size: 0.85rem; width: 120px; }
-        .metric-item { background: #1a1d2b; padding: 6px 12px; border-radius: 16px; display: inline-block; }
-        .metric-label { font-size: 0.6rem; color: #b0b3cc; }
-        .metric-value { font-size: 1.2rem; font-weight: 700; }
+        /* BUTTON GROUP - DIPERBESARKAN UNTUK PHONE (menegak) */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .btn-win, .btn-loss, .reset-btn {
+            padding: 14px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: white;
+            min-width: 150px;
+            text-align: center;
+        }
+        .btn-win { background: linear-gradient(135deg, #1b8732, #2ecc71); box-shadow: 0 5px 15px rgba(46,204,113,0.3); }
+        .btn-loss { background: linear-gradient(135deg, #b33, #e74c3c); box-shadow: 0 5px 15px rgba(231,76,60,0.3); }
+        .reset-btn { background: #2c2f3f; border: 1px solid #6c6f82; color: #f0f0f0; }
+        .btn-win:hover, .btn-loss:hover, .reset-btn:hover { transform: translateY(-3px); filter: brightness(1.05); }
+        
+        .finance-panel, .advanced-metrics, .chart-panel, .history-panel {
+            background: #0e101a;
+            border-radius: 24px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid #282b3a;
+        }
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .input-group label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #b0b3cc;
+        }
+        .input-group input {
+            background: #080a12;
+            border: 1px solid #363a4a;
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 0.9rem;
+            width: 130px;
+        }
+        .metric-item {
+            background: #1a1d2b;
+            padding: 8px 14px;
+            border-radius: 18px;
+            display: inline-block;
+        }
+        .metric-label {
+            font-size: 0.65rem;
+            color: #b0b3cc;
+        }
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
         .good { color: #6eff8e; }
         .bad { color: #ff7080; }
         
-        canvas { background: #0e101a !important; border-radius: 16px; outline: none; max-height: 260px; width: 100%; padding: 5px; }
-        .log-container { max-height: 240px; overflow-y: auto; font-size: 0.7rem; }
-        .log-table { width: 100%; border-collapse: collapse; }
-        .log-table th, .log-table td { padding: 5px 6px; text-align: left; border-bottom: 1px solid #2a2d3c; }
+        canvas {
+            background: #0e101a !important;
+            border-radius: 16px;
+            max-height: 280px;
+            width: 100%;
+            padding: 5px;
+        }
+        .log-container {
+            max-height: 260px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+        }
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .log-table th, .log-table td {
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 1px solid #2a2d3c;
+        }
         .win-row { background: rgba(46,204,113,0.1); }
         .loss-row { background: rgba(231,76,60,0.1); }
-        .icon-btn { background: #262a3a; border: none; border-radius: 40px; padding: 6px 14px; color: white; cursor: pointer; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; }
+        .icon-btn {
+            background: #262a3a;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #1a1d2b; border-radius: 24px; padding: 20px; text-align: center; max-width: 90%; width: 280px; }
-        .modal-buttons { display: flex; gap: 15px; margin-top: 15px; justify-content: center; }
-        .modal-yes, .modal-no { padding: 6px 20px; border-radius: 40px; border: none; font-weight: bold; cursor: pointer; }
-        .modal-yes { background: #e74c3c; color: white; }
-        .modal-no { background: #2c3e50; color: white; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #1a1d2b;
+            border-radius: 24px;
+            padding: 25px;
+            text-align: center;
+            max-width: 90%;
+            width: 320px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .modal-yes { background: #e74c3c; color: white; padding: 8px 25px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; }
+        .modal-no { background: #2c3e50; color: white; padding: 8px 25px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; }
         
+        /* RESPONSIVE UNTUK TELEFON - Butang menjadi penuh lebar dan jarak ke bawah */
         @media (max-width: 600px) {
+            body { padding: 10px; }
             .dashboard { padding: 15px 12px; }
-            .winrate-circle { width: 110px; height: 110px; }
-            .winrate-circle .percent { font-size: 1.8rem; }
-            .streak-card { padding: 8px 12px; min-width: 80px; }
-            .streak-value { font-size: 1.6rem; }
+            .header h1 { font-size: 1.4rem; }
+            .winrate-circle { width: 130px; height: 130px; }
+            .winrate-circle .percent { font-size: 2rem; }
+            .streak-card { padding: 10px 12px; min-width: 100px; }
+            .streak-value { font-size: 1.8rem; }
             .stat-number { font-size: 1.5rem; }
-            .btn-win, .btn-loss { padding: 10px 18px; font-size: 1rem; min-width: 100px; }
-            .metric-value { font-size: 1rem; }
-            .input-group input { width: 100px; }
+            
+            /* Butang di telefon: susun menegak dan lebar penuh */
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .btn-win, .btn-loss, .reset-btn {
+                width: 100%;
+                padding: 14px 10px;
+                font-size: 1.2rem;
+                margin: 0;
+            }
+            /* Input row jadi menegak */
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .input-group input {
+                width: 100%;
+            }
+            .metric-item {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-row { gap: 10px; }
+            .streak-card { min-width: 80px; padding: 8px; }
+            .streak-value { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 <div class="dashboard" id="dashboardCapture">
     <div class="header">
-        <h1><span>📊📈</span> Backtest Simulator <span>💹🧪</span></h1>
-        <p>Tekan <kbd>1</kbd> = WIN &nbsp;&nbsp;|&nbsp;&nbsp; <kbd>2</kbd> = LOSS | Data kekal</p>
+        <h1>Backtest Simulator</h1>
+        <p>Tekan <kbd>1</kbd> = WIN &nbsp;&nbsp;|&nbsp;&nbsp; <kbd>2</kbd> = LOSS | Data kekal walaupun refresh/tutup</p>
     </div>
 
     <div class="stats-row">
-        <div class="streak-card streak-loss"><div class="streak-value" id="streakLossBig">0</div><div>❄️ Kalah Berturut</div></div>
-        <div class="winrate-circle"><span class="percent" id="winratePercent">0%</span><span style="font-size:0.7rem;">Winrate</span></div>
-        <div class="streak-card streak-win"><div class="streak-value" id="streakWinBig">0</div><div>🔥 Menang Berturut</div></div>
+        <div class="streak-card streak-loss">
+            <div class="streak-value" id="streakLossBig">0</div>
+            <div>❄️ Kalah Berturut</div>
+        </div>
+        <div class="winrate-circle">
+            <span class="percent" id="winratePercent">0%</span>
+            <span>Winrate</span>
+        </div>
+        <div class="streak-card streak-win">
+            <div class="streak-value" id="streakWinBig">0</div>
+            <div>🔥 Menang Berturut</div>
+        </div>
     </div>
     
     <div class="basic-stats">
@@ -94,46 +330,46 @@
     <div class="button-group">
         <button class="btn-win" id="btnWin">✅ WIN (1)</button>
         <button class="btn-loss" id="btnLoss">❌ LOSS (2)</button>
-        <button class="reset-btn" id="resetBtn">🔄 Reset</button>
+        <button class="reset-btn" id="resetBtn">🔄 Reset Simulasi</button>
     </div>
 
     <div class="finance-panel">
         <div class="input-row">
-            <div class="input-group"><label>💰 Modal Awal</label><input type="number" id="initialCapital" value="1000" step="100"></div>
+            <div class="input-group"><label>💰 Modal Awal (USD)</label><input type="number" id="initialCapital" value="1000" step="100"></div>
             <div class="input-group"><label>📉 Risk per Trade (%)</label><input type="number" id="riskPercent" value="1" step="0.1"></div>
-            <div class="input-group"><label>⚖️ RR (1:X)</label><input type="text" id="rrInput" value="1:1.5"></div>
-            <div class="metric-item"><div class="metric-label">Untung Bersih</div><div class="metric-value good" id="netProfit">$0</div></div>
-            <div class="metric-item"><div class="metric-label">Untung %</div><div class="metric-value" id="profitPct">0%</div></div>
-            <div class="metric-item"><div class="metric-label">Max DD</div><div class="metric-value bad" id="maxDD">0%</div></div>
+            <div class="input-group"><label>⚖️ RR (1 : X)</label><input type="text" id="rrInput" value="1:1.5" placeholder="1:1.5"></div>
+            <div class="metric-item"><div class="metric-label">Keuntungan Bersih</div><div class="metric-value good" id="netProfit">$0</div></div>
+            <div class="metric-item"><div class="metric-label">Keuntungan %</div><div class="metric-value" id="profitPct">0%</div></div>
+            <div class="metric-item"><div class="metric-label">💀 Max Drawdown</div><div class="metric-value bad" id="maxDD">0%</div></div>
         </div>
     </div>
 
     <div class="advanced-metrics">
-        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
             <div class="metric-item"><div class="metric-label">Profit Factor</div><div class="metric-value" id="profitFactor">-</div></div>
-            <div class="metric-item"><div class="metric-label">Expectancy</div><div class="metric-value" id="expectancy">-</div></div>
-            <div class="metric-item"><div class="metric-label">Avg Win</div><div class="metric-value good" id="avgWin">-</div></div>
-            <div class="metric-item"><div class="metric-label">Avg Loss</div><div class="metric-value bad" id="avgLoss">-</div></div>
-            <div class="metric-item"><div class="metric-label">Recovery</div><div class="metric-value" id="recoveryFactor">-</div></div>
+            <div class="metric-item"><div class="metric-label">Expectancy (USD/trade)</div><div class="metric-value" id="expectancy">-</div></div>
+            <div class="metric-item"><div class="metric-label">Avg Win (USD)</div><div class="metric-value good" id="avgWin">-</div></div>
+            <div class="metric-item"><div class="metric-label">Avg Loss (USD)</div><div class="metric-value bad" id="avgLoss">-</div></div>
+            <div class="metric-item"><div class="metric-label">Recovery Factor</div><div class="metric-value" id="recoveryFactor">-</div></div>
         </div>
     </div>
 
     <div class="chart-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-            <span style="font-weight: bold;">📈 Equity Curve</span>
-            <button id="exportFullBtn" class="icon-btn">💾 Export HTML</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+            <span style="font-weight: bold;">📈 Equity Curve (Modal vs Trade ke-)</span>
+            <button id="exportFullBtn" class="icon-btn">💾 Export Full Report (HTML)</button>
         </div>
-        <canvas id="equityChart" width="800" height="250"></canvas>
+        <canvas id="equityChart" width="800" height="280"></canvas>
     </div>
 
     <div class="history-panel">
-        <div style="margin-bottom: 8px;"><span style="font-weight: bold;">📋 Log Backtest</span></div>
-        <div class="log-container"><table class="log-table"><thead><tr><th>#</th><th>Result</th><th>P/L (USD)</th><th>Equity</th></tr></thead>
+        <div style="margin-bottom: 8px;"><span style="font-weight: bold;">📋 Log Backtest (terkini di atas)</span></div>
+        <div class="log-container"><table class="log-table"><thead><tr><th>#</th><th>WIN/LOSS</th><th>Profit/Loss (USD)</th><th>Equity (USD)</th></tr></thead>
         <tbody id="logTableBody"><tr><td colspan="4" style="text-align:center;">Tiada rekod</td></tr></tbody></table></div>
     </div>
 </div>
 
-<div id="resetModal" class="modal"><div class="modal-content"><h3>⚠️ Reset Data?</h3><p>Semua rekod akan dipadam. Anda pasti?</p><div class="modal-buttons"><button class="modal-yes" id="confirmReset">Ya</button><button class="modal-no" id="cancelReset">Tidak</button></div></div></div>
+<div id="resetModal" class="modal"><div class="modal-content"><h3>⚠️ Reset Data?</h3><p>Semua rekod menang/kalah, graf dan metrik akan dipadam. Anda pasti?</p><div class="modal-buttons"><button class="modal-yes" id="confirmReset">Ya, Reset</button><button class="modal-no" id="cancelReset">Tidak, Batal</button></div></div></div>
 
 <script>
     (function() {
@@ -142,6 +378,7 @@
         let history = [];
         let equityPoints = [];
 
+        // DOM elements
         const winCountEl = document.getElementById('winCount');
         const lossCountEl = document.getElementById('lossCount');
         const totalCountEl = document.getElementById('totalCount');
@@ -167,9 +404,10 @@
             if (parts.length === 2) {
                 let risk = parseFloat(parts[0]), rew = parseFloat(parts[1]);
                 if (!isNaN(risk) && !isNaN(rew) && risk !== 0) return rew / risk;
+            } else {
+                let val = parseFloat(rrStr);
+                if (!isNaN(val)) return val;
             }
-            let val = parseFloat(rrStr);
-            if (!isNaN(val)) return val;
             return 1.5;
         }
 
@@ -325,10 +563,8 @@
             if (equityPoints.length === 0) return;
             const minEquity = Math.min(...equityPoints);
             const maxEquity = Math.max(...equityPoints);
-            // Padding 5% dari range, supaya graf nampak jelas
             const range = maxEquity - minEquity;
-            let padding = range * 0.05;
-            if (range < 1) padding = minEquity * 0.02;
+            let padding = Math.max(range * 0.1, minEquity * 0.02);
             const suggestedMin = Math.max(0, minEquity - padding);
             const suggestedMax = maxEquity + padding;
             
@@ -344,28 +580,32 @@
                     backgroundColor: 'rgba(94,255,158,0.1)', 
                     fill: true, 
                     tension: 0.2, 
-                    pointRadius: 2,
-                    pointHoverRadius: 4,
-                    pointBackgroundColor: '#5eff9e'
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#5eff9e',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 1.5
                 }] },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: { 
                         legend: { labels: { color: '#ddd' } },
-                        tooltip: { callbacks: { label: (ctx) => `Equity: $${ctx.raw.toFixed(2)}` } }
+                        tooltip: { mode: 'index', intersect: false, callbacks: {
+                            label: (ctx) => `Equity: $${ctx.raw.toFixed(2)}`
+                        }}
                     },
                     scales: {
                         y: { 
                             grid: { color: '#2a2d3c' }, 
-                            ticks: { color: '#ccc', callback: (v) => '$' + v.toFixed(0) },
+                            ticks: { color: '#ccc', callback: (val) => '$' + val.toFixed(0) },
                             min: suggestedMin,
                             max: suggestedMax,
                             beginAtZero: false
                         },
                         x: { ticks: { color: '#aaa', maxRotation: 45, autoSkip: true, maxTicksLimit: 8 } }
                     },
-                    layout: { padding: { top: 10, bottom: 5, left: 5, right: 5 } }
+                    layout: { padding: { top: 15, bottom: 10, left: 10, right: 10 } }
                 }
             });
         }
@@ -406,7 +646,7 @@
             }
             let equityPointsData = equityPoints;
             let labels = equityPoints.map((_, idx) => idx === 0 ? 'Start' : `Trade ${idx}`);
-            let htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backtest Report</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script><style>body{background:#0a0c15;color:#eee;font-family:monospace;padding:20px;}.container{max-width:1200px;margin:auto;background:#12141f;border-radius:24px;padding:20px;}h1{color:#ffd966;}.metrics{display:flex;flex-wrap:wrap;gap:15px;margin:20px 0;}.card{background:#1e2130;padding:8px 16px;border-radius:16px;}canvas{max-height:300px;width:100%;margin:20px 0;}table{width:100%;border-collapse:collapse;}th,td{border-bottom:1px solid #2a2d3c;padding:6px;text-align:left;}<\/style><\/head><body><div class="container"><h1>📊 Laporan Backtest</h1><p>${new Date().toLocaleString()}</p><div class="metrics"><div class="card"><strong>Modal Awal:</strong> $${initialCap}</div><div class="card"><strong>Risk:</strong> ${riskPct}%</div><div class="card"><strong>RR:</strong> ${rrStr}</div><div class="card"><strong>Jumlah Trade:</strong> ${total}</div><div class="card"><strong>Winrate:</strong> ${winrate.toFixed(2)}%</div><div class="card"><strong>Untung Bersih:</strong> $${netProfit.toFixed(2)} (${profitPctFinal.toFixed(2)}%)</div><div class="card"><strong>Max DD:</strong> ${maxDD}</div><div class="card"><strong>Profit Factor:</strong> ${profitFactor}</div><div class="card"><strong>Expectancy:</strong> ${expectancy}</div><div class="card"><strong>Avg Win:</strong> ${avgWin}</div><div class="card"><strong>Avg Loss:</strong> ${avgLoss}</div><div class="card"><strong>Recovery:</strong> ${recovery}</div></div><canvas id="reportChart"></canvas><h3>📋 Sejarah</h3>${historyRows ? '<table><thead><tr><th>Trade</th><th>Result</th><th>P/L</th><th>Equity</th></tr></thead><tbody>' + historyRows + '</tbody></table>' : '<p>Tiada dagangan</p>'}</div><script>new Chart(document.getElementById('reportChart'),{type:'line',data:{labels:${JSON.stringify(labels)},datasets:[{label:'Equity (USD)',data:${JSON.stringify(equityPointsData)},borderColor:'#5eff9e',fill:true}]}});<\/script><\/body><\/html>`;
+            let htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backtest Report</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script><style>body{background:#0a0c15;color:#eee;font-family:monospace;padding:20px;}.container{max-width:1200px;margin:auto;background:#12141f;border-radius:24px;padding:20px;}h1{color:#ffd966;}.metrics{display:flex;flex-wrap:wrap;gap:15px;margin:20px 0;}.card{background:#1e2130;padding:8px 16px;border-radius:16px;}canvas{max-height:300px;width:100%;margin:20px 0;background:#0e101a;}table{width:100%;border-collapse:collapse;}th,td{border-bottom:1px solid #2a2d3c;padding:6px;text-align:left;}<\/style><\/head><body><div class="container"><h1>📊 Laporan Backtest Lengkap</h1><p>${new Date().toLocaleString()}</p><div class="metrics"><div class="card"><strong>Modal Awal:</strong> $${initialCap}</div><div class="card"><strong>Risk/trade:</strong> ${riskPct}%</div><div class="card"><strong>RR:</strong> ${rrStr}</div><div class="card"><strong>Jumlah Trade:</strong> ${total}</div><div class="card"><strong>Winrate:</strong> ${winrate.toFixed(2)}%</div><div class="card"><strong>Untung Bersih:</strong> $${netProfit.toFixed(2)} (${profitPctFinal.toFixed(2)}%)</div><div class="card"><strong>Max Drawdown:</strong> ${maxDD}</div><div class="card"><strong>Profit Factor:</strong> ${profitFactor}</div><div class="card"><strong>Expectancy:</strong> ${expectancy}</div><div class="card"><strong>Avg Win:</strong> ${avgWin}</div><div class="card"><strong>Avg Loss:</strong> ${avgLoss}</div><div class="card"><strong>Recovery Factor:</strong> ${recovery}</div></div><canvas id="reportChart"></canvas><h3>📋 Sejarah Dagangan</h3><table><thead><tr><th>Trade</th><th>Keputusan</th><th>Profit/Loss</th><th>Equity</th></tr></thead><tbody>${historyRows}</tbody></table></div><script>new Chart(document.getElementById('reportChart'),{type:'line',data:{labels:${JSON.stringify(labels)},datasets:[{label:'Equity (USD)',data:${JSON.stringify(equityPointsData)},borderColor:'#5eff9e',fill:true}]}});<\/script><\/body><\/html>`;
             let blob = new Blob([htmlContent], { type: "text/html" });
             let a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -415,6 +655,7 @@
             URL.revokeObjectURL(a.href);
         }
 
+        // Event listeners
         document.getElementById('btnWin').addEventListener('click', () => addTrade('win'));
         document.getElementById('btnLoss').addEventListener('click', () => addTrade('loss'));
         const resetModal = document.getElementById('resetModal');
