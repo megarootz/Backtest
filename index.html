@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Forex Backtest Simulator - Responsif & Tanpa Emoji Kotak</title>
+    <title>Forex Backtest Simulator - Graf Jelas & Teks Sahaja</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0c15;
-            font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             padding: 15px;
             color: #f0f0f0;
         }
@@ -30,21 +30,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-        /* Gunakan teks biasa untuk icon jika emoji gagal */
-        .header h1::before {
-            content: "[📊📈] ";
-            background: none;
-            color: #ffd966;
-            -webkit-background-clip: unset;
-            background-clip: unset;
-        }
-        .header h1::after {
-            content: " [💹🧪]";
-            background: none;
-            color: #ffd966;
-            -webkit-background-clip: unset;
-            background-clip: unset;
         }
         .header p {
             text-align: center;
@@ -122,7 +107,7 @@
             color: #ffd966;
         }
         
-        /* BUTTON GROUP - DIPERBESARKAN UNTUK PHONE (menegak) */
+        /* Button group - responsive */
         .button-group {
             display: flex;
             justify-content: center;
@@ -199,7 +184,7 @@
         canvas {
             background: #0e101a !important;
             border-radius: 16px;
-            max-height: 280px;
+            max-height: 300px;
             width: 100%;
             padding: 5px;
         }
@@ -256,7 +241,6 @@
         .modal-yes { background: #e74c3c; color: white; padding: 8px 25px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; }
         .modal-no { background: #2c3e50; color: white; padding: 8px 25px; border-radius: 40px; border: none; cursor: pointer; font-weight: bold; }
         
-        /* RESPONSIVE UNTUK TELEFON - Butang menjadi penuh lebar dan jarak ke bawah */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .dashboard { padding: 15px 12px; }
@@ -266,8 +250,6 @@
             .streak-card { padding: 10px 12px; min-width: 100px; }
             .streak-value { font-size: 1.8rem; }
             .stat-number { font-size: 1.5rem; }
-            
-            /* Butang di telefon: susun menegak dan lebar penuh */
             .button-group {
                 flex-direction: column;
                 align-items: stretch;
@@ -277,9 +259,7 @@
                 width: 100%;
                 padding: 14px 10px;
                 font-size: 1.2rem;
-                margin: 0;
             }
-            /* Input row jadi menegak */
             .input-row {
                 flex-direction: column;
                 align-items: stretch;
@@ -291,11 +271,6 @@
                 width: 100%;
                 text-align: center;
             }
-        }
-        @media (max-width: 480px) {
-            .stats-row { gap: 10px; }
-            .streak-card { min-width: 80px; padding: 8px; }
-            .streak-value { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -309,7 +284,7 @@
     <div class="stats-row">
         <div class="streak-card streak-loss">
             <div class="streak-value" id="streakLossBig">0</div>
-            <div>❄️ Kalah Berturut</div>
+            <div>Kalah Berturut</div>
         </div>
         <div class="winrate-circle">
             <span class="percent" id="winratePercent">0%</span>
@@ -317,30 +292,30 @@
         </div>
         <div class="streak-card streak-win">
             <div class="streak-value" id="streakWinBig">0</div>
-            <div>🔥 Menang Berturut</div>
+            <div>Menang Berturut</div>
         </div>
     </div>
     
     <div class="basic-stats">
-        <div class="stat-box"><div class="stat-number" id="winCount">0</div><div>🏆 Menang</div></div>
-        <div class="stat-box"><div class="stat-number" id="lossCount">0</div><div>💔 Kalah</div></div>
-        <div class="stat-box"><div class="stat-number" id="totalCount">0</div><div>📊 Jumlah</div></div>
+        <div class="stat-box"><div class="stat-number" id="winCount">0</div><div>Menang</div></div>
+        <div class="stat-box"><div class="stat-number" id="lossCount">0</div><div>Kalah</div></div>
+        <div class="stat-box"><div class="stat-number" id="totalCount">0</div><div>Jumlah</div></div>
     </div>
 
     <div class="button-group">
-        <button class="btn-win" id="btnWin">✅ WIN (1)</button>
-        <button class="btn-loss" id="btnLoss">❌ LOSS (2)</button>
-        <button class="reset-btn" id="resetBtn">🔄 Reset Simulasi</button>
+        <button class="btn-win" id="btnWin">WIN (1)</button>
+        <button class="btn-loss" id="btnLoss">LOSS (2)</button>
+        <button class="reset-btn" id="resetBtn">Reset Simulasi</button>
     </div>
 
     <div class="finance-panel">
         <div class="input-row">
-            <div class="input-group"><label>💰 Modal Awal (USD)</label><input type="number" id="initialCapital" value="1000" step="100"></div>
-            <div class="input-group"><label>📉 Risk per Trade (%)</label><input type="number" id="riskPercent" value="1" step="0.1"></div>
-            <div class="input-group"><label>⚖️ RR (1 : X)</label><input type="text" id="rrInput" value="1:1.5" placeholder="1:1.5"></div>
+            <div class="input-group"><label>Modal Awal (USD)</label><input type="number" id="initialCapital" value="1000" step="100"></div>
+            <div class="input-group"><label>Risk per Trade (%)</label><input type="number" id="riskPercent" value="1" step="0.1"></div>
+            <div class="input-group"><label>RR (1 : X)</label><input type="text" id="rrInput" value="1:1.5" placeholder="1:1.5"></div>
             <div class="metric-item"><div class="metric-label">Keuntungan Bersih</div><div class="metric-value good" id="netProfit">$0</div></div>
             <div class="metric-item"><div class="metric-label">Keuntungan %</div><div class="metric-value" id="profitPct">0%</div></div>
-            <div class="metric-item"><div class="metric-label">💀 Max Drawdown</div><div class="metric-value bad" id="maxDD">0%</div></div>
+            <div class="metric-item"><div class="metric-label">Max Drawdown</div><div class="metric-value bad" id="maxDD">0%</div></div>
         </div>
     </div>
 
@@ -356,20 +331,21 @@
 
     <div class="chart-panel">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
-            <span style="font-weight: bold;">📈 Equity Curve (Modal vs Trade ke-)</span>
-            <button id="exportFullBtn" class="icon-btn">💾 Export Full Report (HTML)</button>
+            <span style="font-weight: bold;">Equity Curve (Modal vs Trade ke-)</span>
+            <button id="exportFullBtn" class="icon-btn">Export Full Report (HTML)</button>
         </div>
         <canvas id="equityChart" width="800" height="280"></canvas>
     </div>
 
     <div class="history-panel">
-        <div style="margin-bottom: 8px;"><span style="font-weight: bold;">📋 Log Backtest (terkini di atas)</span></div>
-        <div class="log-container"><table class="log-table"><thead><tr><th>#</th><th>WIN/LOSS</th><th>Profit/Loss (USD)</th><th>Equity (USD)</th></tr></thead>
-        <tbody id="logTableBody"><tr><td colspan="4" style="text-align:center;">Tiada rekod</td></tr></tbody></table></div>
+        <div style="margin-bottom: 8px;"><span style="font-weight: bold;">Log Backtest (terkini di atas)</span></div>
+        <div class="log-container"><table class="log-table"><thead><tr><th>#</th><th>Result</th><th>P/L (USD)</th><th>Equity (USD)</th></tr></thead>
+        <tbody id="logTableBody"><tr><td colspan="4" style="text-align:center;">Tiada rekod. Tekan 1 (WIN) atau 2 (LOSS).</td></tr></tbody>
+        </table></div>
     </div>
 </div>
 
-<div id="resetModal" class="modal"><div class="modal-content"><h3>⚠️ Reset Data?</h3><p>Semua rekod menang/kalah, graf dan metrik akan dipadam. Anda pasti?</p><div class="modal-buttons"><button class="modal-yes" id="confirmReset">Ya, Reset</button><button class="modal-no" id="cancelReset">Tidak, Batal</button></div></div></div>
+<div id="resetModal" class="modal"><div class="modal-content"><h3>Reset Data?</h3><p>Semua rekod menang/kalah, graf dan metrik akan dipadam. Anda pasti?</p><div class="modal-buttons"><button class="modal-yes" id="confirmReset">Ya, Reset</button><button class="modal-no" id="cancelReset">Tidak, Batal</button></div></div></div>
 
 <script>
     (function() {
@@ -555,55 +531,73 @@
             let recovery = (maxDD === 0 || initial === 0) ? 0 : netProfit / (initial * maxDD / 100);
             recoverySpan.textContent = recovery.toFixed(2);
 
-            updateChart();
+            updateChart();   // Kemaskini graf selepas setiap perubahan data
             renderLogTable();
         }
 
         function updateChart() {
-            if (equityPoints.length === 0) return;
-            const minEquity = Math.min(...equityPoints);
-            const maxEquity = Math.max(...equityPoints);
-            const range = maxEquity - minEquity;
-            let padding = Math.max(range * 0.1, minEquity * 0.02);
-            const suggestedMin = Math.max(0, minEquity - padding);
-            const suggestedMax = maxEquity + padding;
+            if (!equityPoints.length) return;
             
-            let labels = equityPoints.map((_, idx) => idx === 0 ? 'Start' : `#${idx}`);
+            // Cari min dan max equityPoints
+            let minEquity = Math.min(...equityPoints);
+            let maxEquity = Math.max(...equityPoints);
+            // Jika hanya satu titik, tambah sedikit padding
+            if (minEquity === maxEquity) {
+                minEquity = minEquity * 0.95;
+                maxEquity = maxEquity * 1.05;
+            } else {
+                let padding = (maxEquity - minEquity) * 0.05; // 5% padding
+                minEquity = minEquity - padding;
+                maxEquity = maxEquity + padding;
+            }
+            // Pastikan tidak negatif
+            minEquity = Math.max(0, minEquity);
+            
+            const labels = equityPoints.map((_, idx) => idx === 0 ? 'Start' : `#${idx}`);
             if (chart) chart.destroy();
             const ctx = document.getElementById('equityChart').getContext('2d');
             chart = new Chart(ctx, {
                 type: 'line',
-                data: { labels, datasets: [{ 
-                    label: 'Equity (USD)', 
-                    data: equityPoints, 
-                    borderColor: '#5eff9e', 
-                    backgroundColor: 'rgba(94,255,158,0.1)', 
-                    fill: true, 
-                    tension: 0.2, 
-                    pointRadius: 3,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: '#5eff9e',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 1.5
-                }] },
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Equity (USD)',
+                        data: equityPoints,
+                        borderColor: '#5eff9e',
+                        backgroundColor: 'rgba(94,255,158,0.1)',
+                        fill: true,
+                        tension: 0.2,
+                        pointRadius: 3,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#5eff9e',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 1.5
+                    }]
+                },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    plugins: { 
+                    plugins: {
                         legend: { labels: { color: '#ddd' } },
-                        tooltip: { mode: 'index', intersect: false, callbacks: {
-                            label: (ctx) => `Equity: $${ctx.raw.toFixed(2)}`
-                        }}
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: (context) => `Equity: $${context.raw.toFixed(2)}`
+                            }
+                        }
                     },
                     scales: {
-                        y: { 
-                            grid: { color: '#2a2d3c' }, 
+                        y: {
+                            grid: { color: '#2a2d3c' },
                             ticks: { color: '#ccc', callback: (val) => '$' + val.toFixed(0) },
-                            min: suggestedMin,
-                            max: suggestedMax,
+                            min: minEquity,
+                            max: maxEquity,
                             beginAtZero: false
                         },
-                        x: { ticks: { color: '#aaa', maxRotation: 45, autoSkip: true, maxTicksLimit: 8 } }
+                        x: {
+                            ticks: { color: '#aaa', maxRotation: 45, autoSkip: true, maxTicksLimit: 10 }
+                        }
                     },
                     layout: { padding: { top: 15, bottom: 10, left: 10, right: 10 } }
                 }
@@ -612,7 +606,7 @@
 
         function renderLogTable() {
             if (history.length === 0) {
-                logTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tiada rekod. Tekan 1 (WIN) atau 2 (LOSS)</td></tr>';
+                logTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tiada rekod. Tekan 1 (WIN) atau 2 (LOSS).</td></tr>';
                 return;
             }
             let reversed = [...history].reverse();
@@ -620,7 +614,12 @@
             for (let h of reversed) {
                 let rowClass = h.type === 'win' ? 'win-row' : 'loss-row';
                 let plSign = h.profitAmount >= 0 ? '+' : '-';
-                rows += `<tr class="${rowClass}"><td>#${h.tradeNum}</td><td><strong>${h.type.toUpperCase()}</strong></td><td>${plSign}$${Math.abs(h.profitAmount).toFixed(2)}</td><td>$${h.equityAfter.toFixed(2)}</td></tr>`;
+                rows += `<tr class="${rowClass}">
+                             <td>#${h.tradeNum}</td>
+                             <td><strong>${h.type.toUpperCase()}</strong></td>
+                             <td>${plSign}$${Math.abs(h.profitAmount).toFixed(2)}</td>
+                             <td>$${h.equityAfter.toFixed(2)}</td>
+                         </tr>`;
             }
             logTableBody.innerHTML = rows;
         }
@@ -642,11 +641,16 @@
             let recovery = recoverySpan.innerText;
             let historyRows = '';
             for (let h of history) {
-                historyRows += `<tr style="background:${h.type === 'win' ? '#1a3a2a' : '#3a1a1a'}"><td>#${h.tradeNum}</td><td>${h.type.toUpperCase()}</td><td>$${h.profitAmount.toFixed(2)}</td><td>$${h.equityAfter.toFixed(2)}</td></tr>`;
+                historyRows += `<tr style="background:${h.type === 'win' ? '#1a3a2a' : '#3a1a1a'}">
+                                    <td>#${h.tradeNum}</td>
+                                    <td>${h.type.toUpperCase()}</td>
+                                    <td>$${h.profitAmount.toFixed(2)}</td>
+                                    <td>$${h.equityAfter.toFixed(2)}</td>
+                                </tr>`;
             }
             let equityPointsData = equityPoints;
             let labels = equityPoints.map((_, idx) => idx === 0 ? 'Start' : `Trade ${idx}`);
-            let htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backtest Report</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script><style>body{background:#0a0c15;color:#eee;font-family:monospace;padding:20px;}.container{max-width:1200px;margin:auto;background:#12141f;border-radius:24px;padding:20px;}h1{color:#ffd966;}.metrics{display:flex;flex-wrap:wrap;gap:15px;margin:20px 0;}.card{background:#1e2130;padding:8px 16px;border-radius:16px;}canvas{max-height:300px;width:100%;margin:20px 0;background:#0e101a;}table{width:100%;border-collapse:collapse;}th,td{border-bottom:1px solid #2a2d3c;padding:6px;text-align:left;}<\/style><\/head><body><div class="container"><h1>📊 Laporan Backtest Lengkap</h1><p>${new Date().toLocaleString()}</p><div class="metrics"><div class="card"><strong>Modal Awal:</strong> $${initialCap}</div><div class="card"><strong>Risk/trade:</strong> ${riskPct}%</div><div class="card"><strong>RR:</strong> ${rrStr}</div><div class="card"><strong>Jumlah Trade:</strong> ${total}</div><div class="card"><strong>Winrate:</strong> ${winrate.toFixed(2)}%</div><div class="card"><strong>Untung Bersih:</strong> $${netProfit.toFixed(2)} (${profitPctFinal.toFixed(2)}%)</div><div class="card"><strong>Max Drawdown:</strong> ${maxDD}</div><div class="card"><strong>Profit Factor:</strong> ${profitFactor}</div><div class="card"><strong>Expectancy:</strong> ${expectancy}</div><div class="card"><strong>Avg Win:</strong> ${avgWin}</div><div class="card"><strong>Avg Loss:</strong> ${avgLoss}</div><div class="card"><strong>Recovery Factor:</strong> ${recovery}</div></div><canvas id="reportChart"></canvas><h3>📋 Sejarah Dagangan</h3><table><thead><tr><th>Trade</th><th>Keputusan</th><th>Profit/Loss</th><th>Equity</th></tr></thead><tbody>${historyRows}</tbody></table></div><script>new Chart(document.getElementById('reportChart'),{type:'line',data:{labels:${JSON.stringify(labels)},datasets:[{label:'Equity (USD)',data:${JSON.stringify(equityPointsData)},borderColor:'#5eff9e',fill:true}]}});<\/script><\/body><\/html>`;
+            let htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Backtest Report</title><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script><style>body{background:#0a0c15;color:#eee;font-family:monospace;padding:20px;}.container{max-width:1200px;margin:auto;background:#12141f;border-radius:24px;padding:20px;}h1{color:#ffd966;}.metrics{display:flex;flex-wrap:wrap;gap:15px;margin:20px 0;}.card{background:#1e2130;padding:8px 16px;border-radius:16px;}canvas{max-height:300px;width:100%;margin:20px 0;background:#0e101a;}table{width:100%;border-collapse:collapse;}th,td{border-bottom:1px solid #2a2d3c;padding:6px;text-align:left;}<\/style><\/head><body><div class="container"><h1>Laporan Backtest Lengkap</h1><p>${new Date().toLocaleString()}</p><div class="metrics"><div class="card"><strong>Modal Awal:</strong> $${initialCap}</div><div class="card"><strong>Risk/trade:</strong> ${riskPct}%</div><div class="card"><strong>RR:</strong> ${rrStr}</div><div class="card"><strong>Jumlah Trade:</strong> ${total}</div><div class="card"><strong>Winrate:</strong> ${winrate.toFixed(2)}%</div><div class="card"><strong>Untung Bersih:</strong> $${netProfit.toFixed(2)} (${profitPctFinal.toFixed(2)}%)</div><div class="card"><strong>Max Drawdown:</strong> ${maxDD}</div><div class="card"><strong>Profit Factor:</strong> ${profitFactor}</div><div class="card"><strong>Expectancy:</strong> ${expectancy}</div><div class="card"><strong>Avg Win:</strong> ${avgWin}</div><div class="card"><strong>Avg Loss:</strong> ${avgLoss}</div><div class="card"><strong>Recovery Factor:</strong> ${recovery}</div></div><canvas id="reportChart"></canvas><h3>Sejarah Dagangan</h3><table><thead><tr><th>Trade</th><th>Keputusan</th><th>Profit/Loss</th><th>Equity</th></tr></thead><tbody>${historyRows}</tbody></table></div><script>new Chart(document.getElementById('reportChart'),{type:'line',data:{labels:${JSON.stringify(labels)},datasets:[{label:'Equity (USD)',data:${JSON.stringify(equityPointsData)},borderColor:'#5eff9e',fill:true}]}});<\/script><\/body><\/html>`;
             let blob = new Blob([htmlContent], { type: "text/html" });
             let a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
